@@ -1,3 +1,5 @@
+//! Stolen from https://github.com/stm32-rs/stm32f4xx-hal/blob/master/examples/delay-blinky.rs
+
 #![no_std]
 #![no_main]
 
