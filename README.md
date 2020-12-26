@@ -14,6 +14,10 @@ This repository was generated from the [cortex-m-quickstart template](https://gi
 ## Plans
 
 * [ ] Follow the Rust embedded discovery [book](https://docs.rust-embedded.org/discovery/index.html)
+  * [x] blinky
+  * [x] Hello world via ITM
+* [ ] Get button input working
+* [ ] Get input working
 * [ ] Move on to the STM32F7 Discovery boards I have laying around and drive their touchscreen
 displays
 * [ ] ???
