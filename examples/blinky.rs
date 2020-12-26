@@ -21,7 +21,8 @@ fn main() -> ! {
         stm32::Peripherals::take(),
         cortex_m::peripheral::Peripherals::take(),
     ) {
-        // Set up the LED. On the Nucleo-446RE it's connected to pin PA5.
+        // Set up the LED. On the NUCLEO-F401RE it's connected to pin PA5.
+        // Calling split also powers up the GPIOA peripheral clock
         let gpioa = dp.GPIOA.split();
         let mut led = gpioa.pa5.into_push_pull_output();
 

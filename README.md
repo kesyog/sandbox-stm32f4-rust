@@ -1,13 +1,13 @@
 # STM32F401 Nucleo-64 Sandbox
 
-A sandbox to play with my STM32 Nucleo-64 development board. The board is based on a STM32F401RE,
+A sandbox to play with my STM32 Nucleo-64 development board that is based around an STM32F401RE.
 which provides:
 
 * 84MHz ARM Cortex M4
-* 512K Flash
-* 96K SRAM
+* 512K Flash, 96K SRAM
 * Built-in ST-LINK debugger/programmer
 * An LED and a button
+* Lots of exposed pins
 
 This repository was generated from the [cortex-m-quickstart template](https://github.com/rust-embedded/cortex-m-quickstart).
 
