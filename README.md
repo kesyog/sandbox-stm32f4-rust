@@ -35,7 +35,7 @@ This repository is licensed under the [MIT license](LICENSE)
 
 * [svd2rust](https://docs.rs/svd2rust/0.17.0/svd2rust/index.html)
 * [embedded\_hal](https://docs.rs/embedded-hal/0.2.4/embedded_hal/index.html)
-* [stm32l4xx\_hal](https://docs.rs/stm32l4xx-hal/0.6.0/stm32l4xx_hal/index.html)
+* [stm3244xx\_hal](https://docs.rs/stm32f4xx-hal/0.8.3/stm32f4xx_hal)
 * [stm32f4.stm32f401](https://docs.rs/stm32f4/0.12.1/stm32f4/stm32f401/index.html)
 
 ### Tutorials

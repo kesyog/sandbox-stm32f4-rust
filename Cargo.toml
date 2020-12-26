@@ -21,11 +21,11 @@ volatile = "0.4.3"
 # alloc-cortex-m = "0.4.0"
 
 [dependencies.stm32f4xx-hal]
-version = "0.8"
+version = "^0.8"
 features = ["rt", "stm32f401"]
 
 [dependencies.stm32f4]
-version = "0.12.1"
+version = "^0.12.1"
 features = ["stm32f401", "rt"]
 
 # this lets you use `cargo fix`!
