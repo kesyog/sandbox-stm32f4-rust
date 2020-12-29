@@ -59,23 +59,21 @@ fn main() -> ! {
         let gpioa = dp.GPIOA.split();
         let mut led = gpioa.pa5.into_push_pull_output();
 
-        // Set up the system clock. We want to run at 48MHz for this one.
         let rcc = dp.RCC.constrain();
         let clocks = rcc.cfgr.sysclk(16.mhz()).freeze();
 
-        let mut timer = hal::timer::Timer::tim2(dp.TIM2, 2.khz(), clocks);
+        let mut timer = hal::timer::Timer::tim2(dp.TIM2, 1.hz(), clocks);
         timer.cancel().unwrap();
+        timer.clear_interrupt(hal::timer::Event::TimeOut);
 
         interrupt::free(|cs| {
             TIM2_PERIPH.borrow(cs).replace(Some(timer));
         });
-        // Hack: without this, the first flash happens super quickly
-        delay();
 
         loop {
-            led.set_high().unwrap();
-            delay();
             led.set_low().unwrap();
+            delay();
+            led.set_high().unwrap();
             delay();
         }
     }
