@@ -16,8 +16,13 @@ This repository was generated from the [cortex-m-quickstart template](https://gi
 * [ ] Follow the Rust embedded discovery [book](https://docs.rust-embedded.org/discovery/index.html)
   * [x] blinky
   * [x] Hello world via ITM
-* [ ] Get button input working
-* [ ] Get input working
+  * [x] UART echo server
+  * [ ] blinky with hardware timer-based busy-waits
+* [ ] blinky using timer interrupts
+* [ ] UART echo server using interrupts
+* [ ] UART echo server using interrupts + DMA
+* [ ] Button input interrupt + debouncing
+* [ ] RTIC or async
 * [ ] Move on to the STM32F7 Discovery boards I have laying around and drive their touchscreen
 displays
 * [ ] ???
@@ -50,6 +55,7 @@ This repository is licensed under the [MIT license](LICENSE)
 ### Other links
 
 * [NUCLEO-F401RE documentation](https://www.st.com/en/evaluation-tools/nucleo-f401re.html)
+* [STM32F401 reference manual](https://www.st.com/resource/en/reference_manual/dm00096844-stm32f401xbc-and-stm32f401xde-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
 * [stm32-rs](https://github.com/stm32-rs)
 * [awesome-embedded-rust](https://github.com/rust-embedded/awesome-embedded-rust)
 
