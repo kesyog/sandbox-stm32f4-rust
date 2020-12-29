@@ -28,17 +28,13 @@ displays
 * [ ] ???
 * [ ] 🚀
 
-
-## Board specs
-
-* ARM Cortex M4 84MHz
-* 512-KB Flash, 96-KB SRAM
-
 ## License
 
 This repository is licensed under the [MIT license](LICENSE)
 
 ## References
+
+[My notes](notes.md), mostly lifted from the other linked references
 
 ### Useful crate docs
 
@@ -54,8 +50,9 @@ This repository is licensed under the [MIT license](LICENSE)
 
 ### Other links
 
+* [cortex-m-quickstart template project](https://github.com/rust-embedded/cortex-m-quickstart)
 * [NUCLEO-F401RE documentation](https://www.st.com/en/evaluation-tools/nucleo-f401re.html)
 * [STM32F401 reference manual](https://www.st.com/resource/en/reference_manual/dm00096844-stm32f401xbc-and-stm32f401xde-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
 * [stm32-rs](https://github.com/stm32-rs)
 * [awesome-embedded-rust](https://github.com/rust-embedded/awesome-embedded-rust)
-
+* [The embedonomicon](https://docs.rust-embedded.org/embedonomicon/index.html): advanced topics
