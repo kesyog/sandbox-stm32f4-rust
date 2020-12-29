@@ -31,7 +31,7 @@ There's a great writeup on various techniques [here](https://rust-embedded.githu
 | Technique | Multiple functions within one thread | Multiple threads | Thread and interrupt |
 |-----------|--------------------------------------|------------------|----------------------|
 | Pass singleton by value |  ✅ | ✅ (can move into thread at thread creation) | n/a |
-| Unsafe code (e.g. direct register access, global UnsafeCell) |  ✅ (but would rather stick to safe code if possible) | ⚠ (bypasses safety checks) | ⚠ (bypasses safety checks) |
+| Unsafe code (e.g. direct register access, global mutable state) |  ✅ (but would rather stick to safe code if possible) | ⚠ (bypasses safety checks) | ⚠ (bypasses safety checks) |
 | Global `Cell`/`RefCell` protected by mutex | ✅ (but adds unnecessary overhead) | ✅ | ⛔ (shouldn't lock in an interrupt) |
 | Global `Cell`/`RefCell` protected by critical section (e.g. via `cortex_m::interrupt`) |✅ (but adds unnecessary overhead and interrupt masking) | ✅ | ✅ |
 | Global atomic cell (e.g. crossbeam `AtomicCell`) |✅ | ✅ | ✅ |
