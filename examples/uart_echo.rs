@@ -13,6 +13,7 @@ use crate::hal::{
     stm32::{self, usart1, USART2},
 };
 #[allow(unused_extern_crates)]
+use cortex_m::iprintln;
 use cortex_m_rt::entry;
 use stm32f4xx_hal as hal;
 
@@ -22,6 +23,9 @@ fn main() -> ! {
         stm32::Peripherals::take(),
         cortex_m::peripheral::Peripherals::take(),
     ) {
+        let stim = &mut cp.ITM.stim[0];
+        iprintln!(stim, "Boot");
+
         let rcc = dp.RCC.constrain();
         let clocks = rcc.cfgr.sysclk(84.mhz()).freeze();
 

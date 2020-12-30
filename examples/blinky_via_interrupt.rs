@@ -52,7 +52,7 @@ fn main() -> ! {
             cortex_m::peripheral::NVIC::unmask(Interrupt::TIM2);
         }
 
-        let mut timer = hal::timer::Timer::tim2(dp.TIM2, 1.hz(), clocks);
+        let mut timer = Timer::tim2(dp.TIM2, 1.hz(), clocks);
         timer.listen(hal::timer::Event::TimeOut);
         LEDS.try_move(LedContext {
             on: false,

@@ -24,7 +24,7 @@ break main
 # # send captured ITM to the file itm.fifo
 # # (the microcontroller SWO pin must be connected to the programmer SWO pin)
 # Kes: STM32F4 default RC oscillator is 16MHz. Need to increase this if setting a higher SYSCLK/HCLK like 84MHz
-monitor tpiu config internal /tmp/itm.txt uart off 16000000
+monitor tpiu config internal /tmp/itm.txt uart off 84000000
 
 # # OR: make the microcontroller SWO pin output compatible with UART (8N1)
 # # 8000000 must match the core clock frequency

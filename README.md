@@ -19,12 +19,12 @@ This repository was generated from the [cortex-m-quickstart template](https://gi
   * [x] UART echo server
   * [x] blinky with hardware timer-based busy-waits
 * [x] blinky using timer interrupts
-* [ ] UART echo server using interrupts
+* [x] UART echo server using interrupts
 * [ ] UART echo server using interrupts + DMA
-* [ ] Button input interrupt + debouncing
-* [ ] RTIC or async
+* [ ] async
 * [ ] Move on to the STM32F7 Discovery boards I have laying around and drive their touchscreen
 displays
+* [ ] RTIC
 * [ ] ???
 * [ ] 🚀
 
