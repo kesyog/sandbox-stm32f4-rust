@@ -19,7 +19,7 @@ use stm32f4xx_hal as hal;
 
 #[entry]
 fn main() -> ! {
-    if let (Some(dp), Some(cp)) = (
+    if let (Some(dp), Some(mut cp)) = (
         stm32::Peripherals::take(),
         cortex_m::peripheral::Peripherals::take(),
     ) {
