@@ -7,12 +7,11 @@ use panic_halt as _; // you can put a breakpoint on `rust_begin_unwind` to catch
                      // use panic_itm as _; // logs messages over ITM; requires ITM support
                      // use panic_semihosting as _; // logs messages to the host stderr; requires a debugger
 
+use crate::hal::{prelude::*, stm32};
 #[allow(unused_extern_crates)]
-
 use cortex_m::{asm::bkpt, iprint, iprintln, peripheral::ITM};
 use cortex_m_rt::entry;
 use stm32f4xx_hal as hal;
-use crate::hal::{prelude::*, stm32};
 
 #[entry]
 fn main() -> ! {
@@ -21,7 +20,10 @@ fn main() -> ! {
 
     // Run `monitor tpiu config internal itm.txt uart off 16000000` in gdb or add it to openocd.gdb
     let mut itm = cp.ITM;
-    iprintln!(&mut itm.stim[0], "PandasPandasPandasPandasPandasPandasPandas 🐼");
+    iprintln!(
+        &mut itm.stim[0],
+        "PandasPandasPandasPandasPandasPandasPandas 🐼"
+    );
 
     loop {}
 }

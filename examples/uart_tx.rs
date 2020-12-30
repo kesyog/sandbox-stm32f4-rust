@@ -7,15 +7,15 @@ use panic_halt as _; // you can put a breakpoint on `rust_begin_unwind` to catch
                      // use panic_itm as _; // logs messages over ITM; requires ITM support
                      // use panic_semihosting as _; // logs messages to the host stderr; requires a debugger
 
+use crate::hal::{
+    prelude::*,
+    serial::{config::Config, Pins, Serial},
+    stm32::{self, usart1, USART2},
+};
+use core::fmt::{self, Write};
 #[allow(unused_extern_crates)]
 use cortex_m_rt::entry;
 use stm32f4xx_hal as hal;
-use crate::hal::{
-    prelude::*,
-    serial::{Serial, config::Config, Pins},
-    stm32::{self, USART2, usart1},
-};
-use core::fmt::{self, Write};
 
 #[allow(unused_macros)]
 macro_rules! uprint {
@@ -35,11 +35,13 @@ macro_rules! uprintln {
 }
 
 struct SerialPort<PINS> {
-    usart: Serial<USART2, PINS>
+    usart: Serial<USART2, PINS>,
 }
 
 impl<PINS> fmt::Write for SerialPort<PINS>
-where PINS: Pins<USART2> {
+where
+    PINS: Pins<USART2>,
+{
     fn write_str(&mut self, s: &str) -> fmt::Result {
         for byte in s.bytes() {
             self.usart.write(byte).map_err(|_| fmt::Error)?;
@@ -69,9 +71,15 @@ fn main() -> ! {
         // TX: PA2
         let tx = gpioa.pa2.into_alternate_af7();
         let rx = gpioa.pa3.into_alternate_af7();
-        let mut serial = Serial::usart2(dp.USART2, (tx, rx), Config::default().baudrate(115200.bps()), clocks).unwrap();
+        let mut serial = Serial::usart2(
+            dp.USART2,
+            (tx, rx),
+            Config::default().baudrate(115200.bps()),
+            clocks,
+        )
+        .unwrap();
         let mut delay = hal::delay::Delay::new(cp.SYST, clocks);
-        let usart2 = unsafe { &mut *(USART2::ptr() as *mut usart1::RegisterBlock)};
+        let usart2 = unsafe { &mut *(USART2::ptr() as *mut usart1::RegisterBlock) };
 
         // Use peripheral access crate (PAC) write a character to the serial port's transmission data register
         for byte in b"\r\n" {

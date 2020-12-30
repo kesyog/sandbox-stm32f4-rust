@@ -16,7 +16,7 @@ use crate::hal::{
 use core::cell::Cell;
 use cortex_m::{
     interrupt::{self, Mutex},
-    iprintln
+    iprintln,
 };
 use cortex_m_rt::entry;
 use embedded_hal::timer::{Cancel, CountDown};
@@ -51,7 +51,6 @@ fn main() -> ! {
         stm32::Peripherals::take(),
         cortex_m::peripheral::Peripherals::take(),
     ) {
-
         let stim = &mut cp.ITM.stim[0];
         iprintln!(stim, "Boot");
         // Set up the LED. On the NUCLEO-F401RE it's connected to pin PA5.

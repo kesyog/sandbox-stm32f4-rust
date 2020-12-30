@@ -9,20 +9,16 @@ use panic_halt as _; // you can put a breakpoint on `rust_begin_unwind` to catch
 
 #[allow(unused_extern_crates)]
 use crate::hal::{
-    prelude::*,
-    stm32::{self, TIM2, Interrupt,},
-    timer::Timer,
+    gpio::{gpioa::PA5, Output, PushPull},
     interrupt,
-    gpio::{
-        gpioa::PA5,
-        Output,
-        PushPull,
-    },
+    prelude::*,
+    stm32::{self, Interrupt, TIM2},
+    timer::Timer,
 };
+use cmim::{Context, Move};
 use cortex_m::iprintln;
 use cortex_m_rt::entry;
 use stm32f4xx_hal as hal;
-use cmim::{Move, Context};
 
 // Data that is "moved" into the interrupt via the cmim crate
 struct LedContext {
@@ -33,7 +29,8 @@ struct LedContext {
 
 // Using cmim crate to move control of the LED GPIO pin and timer peripheral to the interrupt
 // Could also use a critical section or atomic cell here
-static LEDS: Move<LedContext, Interrupt> = Move::new_uninitialized(Context::Interrupt(Interrupt::TIM2));
+static LEDS: Move<LedContext, Interrupt> =
+    Move::new_uninitialized(Context::Interrupt(Interrupt::TIM2));
 
 #[entry]
 fn main() -> ! {
@@ -41,7 +38,6 @@ fn main() -> ! {
         stm32::Peripherals::take(),
         cortex_m::peripheral::Peripherals::take(),
     ) {
-
         let stim = &mut cp.ITM.stim[0];
         iprintln!(stim, "Boot");
         // Set up the LED. On the NUCLEO-F401RE it's connected to pin PA5.
@@ -52,11 +48,18 @@ fn main() -> ! {
         let rcc = dp.RCC.constrain();
         let clocks = rcc.cfgr.sysclk(84.mhz()).freeze();
 
-        unsafe { cortex_m::peripheral::NVIC::unmask(Interrupt::TIM2);}
+        unsafe {
+            cortex_m::peripheral::NVIC::unmask(Interrupt::TIM2);
+        }
 
         let mut timer = hal::timer::Timer::tim2(dp.TIM2, 1.hz(), clocks);
         timer.listen(hal::timer::Event::TimeOut);
-        LEDS.try_move(LedContext {on: false, pin: led, timer},).ok();
+        LEDS.try_move(LedContext {
+            on: false,
+            pin: led,
+            timer,
+        })
+        .ok();
     }
 
     loop {}
@@ -72,5 +75,6 @@ fn TIM2() {
         }
         led_ctx.on = !led_ctx.on;
         led_ctx.timer.clear_interrupt(hal::timer::Event::TimeOut);
-    }).ok();
+    })
+    .ok();
 }

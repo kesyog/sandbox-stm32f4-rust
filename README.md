@@ -17,8 +17,8 @@ This repository was generated from the [cortex-m-quickstart template](https://gi
   * [x] blinky
   * [x] Hello world via ITM
   * [x] UART echo server
-  * [ ] blinky with hardware timer-based busy-waits
-* [ ] blinky using timer interrupts
+  * [x] blinky with hardware timer-based busy-waits
+* [x] blinky using timer interrupts
 * [ ] UART echo server using interrupts
 * [ ] UART echo server using interrupts + DMA
 * [ ] Button input interrupt + debouncing
