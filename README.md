@@ -31,10 +31,10 @@ Check out the examples folder for some ugly implementations.
   * [x] blinky with hardware timer-based busy-waits
 * [x] blinky using timer interrupts
 * [x] UART echo server using interrupts
-* [ ] Port to RTIC
-* [ ] Use DMA
-* [ ] Move on to the STM32F7 Discovery boards I have laying around and drive their touchscreen
-  displays
+* [x] RTIC-based UART echo server
+* [ ] Drive some displays with the help of the [embedded\_graphics](https://github.com/embedded-graphics/embedded-graphics)
+  crate
+* [ ] Figure out DMA
 * [ ] ???
 * [ ] 🚀
 
@@ -61,3 +61,4 @@ This repository was originally generated from the [cortex-m-quickstart template]
 * [embedded\_hal](https://docs.rs/embedded-hal/0.2.4/embedded_hal/index.html)
 * [stm32f4xx\_hal](https://docs.rs/stm32f4xx-hal/0.8.3/stm32f4xx_hal)
 * [stm32f4.stm32f401](https://docs.rs/stm32f4/0.12.1/stm32f4/stm32f401/index.html)
+* [RTIC concurrency framework](https://rtic.rs/0.5/book/en/preface.html)

@@ -10,20 +10,18 @@ use panic_halt as _; // you can put a breakpoint on `rust_begin_unwind` to catch
                      // use panic_semihosting as _; // logs messages to the host stderr; requires a debugger
 
 use crate::hal::{
-    gpio::{
-        gpioa::{PA2, PA3, PA5},
-        Output, PushPull, AF7,
-    },
+    gpio::{gpioa::PA5, Output, PushPull},
     interrupt,
     prelude::*,
     serial::{config::Config, Serial},
-    stm32::{self, Interrupt, TIM2, USART2},
+    stm32::{self, Interrupt, TIM2},
     timer::Timer,
 };
 use cmim::{Context, Move};
+use core::{cell::RefCell, iter::IntoIterator, ops::DerefMut};
 use cortex_m::{interrupt::Mutex, iprintln};
 use cortex_m_rt::entry;
-use serial_driver::UART_HANDLE;
+use sandbox_stm32f4_rust::uart_driver::{self, UartContext};
 use stm32f4xx_hal as hal;
 
 type LedPin = PA5<Output<PushPull>>;
@@ -38,6 +36,7 @@ struct LedContext {
 // Could also use a critical section or atomic cell here
 static LEDS: Move<LedContext, Interrupt> =
     Move::new_uninitialized(Context::Interrupt(Interrupt::TIM2));
+static UART_CTX: Mutex<RefCell<Option<UartContext>>> = Mutex::new(RefCell::new(None));
 
 #[entry]
 fn main() -> ! {
@@ -82,11 +81,28 @@ fn main() -> ! {
         serial.listen(hal::serial::Event::Rxne);
 
         cortex_m::interrupt::free(|cs| {
-            *UART_HANDLE.borrow(cs).borrow_mut() = Some(serial);
+            *UART_CTX.borrow(cs).borrow_mut() = Some(UartContext::new(serial));
         });
     }
 
     loop {}
+}
+
+#[interrupt]
+fn USART2() {
+    cortex_m::interrupt::free(|cs| {
+        let mut cell = UART_CTX.borrow(cs).borrow_mut();
+        let serial_ctx = cell.deref_mut().as_mut().unwrap();
+        uart_driver::interrupt(serial_ctx);
+    });
+}
+
+fn serial_write<T: IntoIterator<Item = u8>>(bytes: T) {
+    cortex_m::interrupt::free(|cs| {
+        let mut cell = UART_CTX.borrow(cs).borrow_mut();
+        let serial_ctx = cell.deref_mut().as_mut().unwrap();
+        uart_driver::write(serial_ctx, bytes);
+    });
 }
 
 #[interrupt]
@@ -105,96 +121,9 @@ fn TIM2() {
     .ok();
 
     if *LED_ON {
-        serial_driver::write("LED on".bytes());
+        serial_write("LED on".bytes());
     } else {
-        serial_driver::write("LED off".bytes());
+        serial_write("LED off".bytes());
     }
-    serial_driver::write("\r\n".bytes());
-}
-
-mod serial_driver {
-    /// Janky interrupt-based serial driver. It can transmit bytes via [write_byte] or [write].
-    /// Otherwise it echos any received bytes back to the sender
-    use super::*;
-    use core::{
-        cell::RefCell,
-        iter::IntoIterator,
-        ops::DerefMut,
-        sync::atomic::{AtomicBool, Ordering},
-    };
-    use heapless::mpmc::Q32;
-
-    type DebugUart = Serial<
-        USART2,
-        (
-            PA2<hal::gpio::Alternate<AF7>>,
-            PA3<hal::gpio::Alternate<AF7>>,
-        ),
-    >;
-
-    // Lock-free MPMC queue. Not super space efficient and doesn't support peeking but otherwise
-    // convenient for hacking things together.
-    static TX_QUEUE: Q32<u8> = Q32::new();
-    static TX_PENDING: AtomicBool = AtomicBool::new(false);
-    // Need true sharing of UART peripheral between interrupt and user code
-    pub static UART_HANDLE: Mutex<RefCell<Option<DebugUart>>> = Mutex::new(RefCell::new(None));
-
-    pub fn write_byte(byte: u8) {
-        cortex_m::interrupt::free(|cs| {
-            let mut cell = UART_HANDLE.borrow(cs).borrow_mut();
-            let serial = cell.deref_mut().as_mut().unwrap();
-
-            if TX_PENDING.load(Ordering::Acquire) {
-                TX_QUEUE.enqueue(byte).ok();
-            } else {
-                serial.write(byte).ok();
-                TX_PENDING.store(true, Ordering::Release);
-                serial.listen(hal::serial::Event::Txe);
-            }
-        });
-    }
-
-    pub fn write<T: IntoIterator<Item = u8>>(bytes: T) {
-        for byte in bytes.into_iter() {
-            write_byte(byte);
-        }
-    }
-
-    #[interrupt]
-    fn USART2() {
-        cortex_m::interrupt::free(|cs| {
-            let mut cell = UART_HANDLE.borrow(cs).borrow_mut();
-            let serial = cell.deref_mut().as_mut().unwrap();
-
-            if serial.is_rxne() {
-                if let Some(rx_byte) = serial.read().ok() {
-                    TX_QUEUE.enqueue(rx_byte).ok();
-                    if rx_byte == b'\r' {
-                        TX_QUEUE.enqueue(b'\n').ok();
-                        TX_QUEUE.enqueue(b'$').ok();
-                        TX_QUEUE.enqueue(b'>').ok();
-                        TX_QUEUE.enqueue(b' ').ok();
-                    }
-                }
-            }
-
-            if serial.is_txe() {
-                if let Some(next_byte) = TX_QUEUE.dequeue() {
-                    serial.write(next_byte).ok();
-                    serial.listen(hal::serial::Event::Txe);
-                    TX_PENDING.store(true, Ordering::Release);
-                } else {
-                    // Nothing more to send
-                    serial.unlisten(hal::serial::Event::Txe);
-                    TX_PENDING.store(false, Ordering::Release);
-                }
-            } else if !TX_PENDING.load(Ordering::Acquire) {
-                if let Some(next_byte) = TX_QUEUE.dequeue() {
-                    serial.write(next_byte).ok();
-                    serial.listen(hal::serial::Event::Txe);
-                    TX_PENDING.store(true, Ordering::Release);
-                }
-            }
-        });
-    }
+    serial_write("\r\n".bytes());
 }
