@@ -1,11 +1,10 @@
 # Nucleo-F401RE Rust sandbox
 
-A sandbox with some super basic examples created to help wrap my head around what using Rust for
-embedded development looks like.
+A sandbox with some basic examples created to help wrap my head around what using Rust for embedded
+development looks like and keep a running list of helpful resources.
 
-There's virtually nothing new here beyond what's already in the linked embedded tutorials or the
-examples available in the various STM32 peripheral access and HAL crates, but maybe the links below
-are useful to someone 🤷🏽‍♂
+There's only a tiny bit new here beyond what's already in the linked embedded tutorials or the
+examples available in the linked crates, but maybe the links down below are useful to someone 🤷🏽‍♂
 
 ## Hardware
 
@@ -32,8 +31,8 @@ Check out the examples folder for some ugly implementations.
 * [x] blinky using timer interrupts
 * [x] UART echo server using interrupts
 * [x] RTIC-based UART echo server
-* [ ] Drive some displays with the help of the [embedded\_graphics](https://github.com/embedded-graphics/embedded-graphics)
-  crate
+* [x] Draw some things on an SH1106 OLED display with the [embedded\_graphics](https://github.com/embedded-graphics/embedded-graphics)
+  crate and the [sh1106](https://github.com/jamwaffles/sh1106) driver crate.
 * [ ] Figure out DMA
 * [ ] ???
 * [ ] 🚀
@@ -62,3 +61,4 @@ This repository was originally generated from the [cortex-m-quickstart template]
 * [stm32f4xx\_hal](https://docs.rs/stm32f4xx-hal/0.8.3/stm32f4xx_hal)
 * [stm32f4.stm32f401](https://docs.rs/stm32f4/0.12.1/stm32f4/stm32f401/index.html)
 * [RTIC concurrency framework](https://rtic.rs/0.5/book/en/preface.html)
+* [embedded\_graphics](https://github.com/embedded-graphics/embedded-graphics)
