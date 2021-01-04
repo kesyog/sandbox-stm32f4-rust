@@ -37,6 +37,12 @@ Check out the examples folder for some ugly implementations.
 * [ ] ???
 * [ ] 🚀
 
+## Demo
+
+Just for fun
+
+<img src="sh1106.jpg" width="500">
+
 ## License
 
 This repository is licensed under the [MIT license](LICENSE)

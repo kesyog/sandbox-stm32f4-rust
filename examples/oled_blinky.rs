@@ -70,12 +70,12 @@ fn main() -> ! {
         disp.init().unwrap();
 
         loop {
-            clear(&mut disp);
             draw_kes(&mut disp);
-            delay.delay_ms(1000_u32);
+            delay.delay_ms(3000_u32);
             clear(&mut disp);
-            draw_shapes(&mut disp);
-            delay.delay_ms(1000_u32);
+            delay.delay_ms(250_u32);
+            //draw_shapes(&mut disp);
+            //delay.delay_ms(250_u32);
         }
     }
 
@@ -96,8 +96,8 @@ fn draw_kes<T: DisplayInterface>(disp: &mut GraphicsMode<T>)
 where
     T::Error: core::fmt::Debug,
 {
-    let im: ImageRawLE<BinaryColor> = ImageRawLE::new(include_bytes!("./kes.raw"), 100, 64);
-    Image::new(&im, Point::new(14, 0)).draw(disp).unwrap();
+    let im: ImageRawLE<BinaryColor> = ImageRawLE::new(include_bytes!("./kes.raw"), 128, 64);
+    Image::new(&im, Point::new(0, 0)).draw(disp).unwrap();
     disp.flush().unwrap()
 }
 
